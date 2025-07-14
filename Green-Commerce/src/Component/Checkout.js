@@ -193,6 +193,11 @@ const styles = {
   },
 };
 function Checkout() {
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  
   const [{ basket }, dispatch] = useStateValue();
   const [selectedItems, setSelectedItems] = useState(
     basket.reduce((acc, _, idx) => ({ ...acc, [idx]: true }), {})
@@ -207,6 +212,7 @@ function Checkout() {
   const [donation, setDonation] = useState(0);
   const [hoveredIdx, setHoveredIdx] = useState(-1);
   const [homeNo, setHomeNo] = useState("");
+  const [placingOrder, setPlacingOrder] = useState(false);
   const [pincode, setPincode] = useState("");
   const [totalpayment, SettotalPayment] = useState();
   const [blinkCoupon, setBlinkCoupon] = useState(false);
@@ -218,20 +224,18 @@ function Checkout() {
   const couponSectionRef = useRef(null);
   
   const handlePlaceOrder = async () => {
-    // 🌱 Confetti burst
+    setPlacingOrder(true); // prevent Cartempty render
+  
     const defaults = {
       origin: { y: 0.6 },
       emojis: ['🌱', '💚', '🍀', '♻'],
       scalar: 1.2,
       spread: 120,
     };
-    const months = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ];
     confetti({ ...defaults, particleCount: 50, origin: { x: 0.5, y: 0.5 } });
     confetti({ ...defaults, particleCount: 40, origin: { x: 0.2, y: 0.4 } });
     confetti({ ...defaults, particleCount: 40, origin: { x: 0.8, y: 0.4 } });
+  
     const date = new Date();
     date.setDate(date.getDate() + 14);
     const userEmail = localStorage.getItem("email");
@@ -248,17 +252,14 @@ function Checkout() {
       totalAmount: totalpayment,
       ecoPackaging,
       deliveryDate: `${date.getDate()} ${months[date.getMonth()]}`,
-      address:
-        'Hostel J, Nit Jamshedpur, JAMSHEDPUR, JHARKHAND, 831014, India',
+      address: 'Hostel J, Nit Jamshedpur, JAMSHEDPUR, JHARKHAND, 831014, India',
     };
-
+  
     try {
       await axios.post('http://localhost:8080/place-order', orderPayload);
-
-      // ✅ Add to global order history and clear basket
       dispatch({ type: 'ADD_TO_HISTORY', items: basket });
       dispatch({ type: 'CLEAR_BASKET' });
-      
+  
       setTimeout(() => {
         navigate('/order-confirmation', {
           state: { order: orderPayload },
@@ -267,8 +268,10 @@ function Checkout() {
     } catch (err) {
       console.error('Order submission failed', err);
       alert('Something went wrong while placing your order.');
+      setPlacingOrder(false); // allow UI to show again if error
     }
   };
+  
 
   const handleStartGroupOrder = () => {
     setShowGroupModal(true);
@@ -352,9 +355,10 @@ function Checkout() {
     }, 400); // blink time
   };
 
-  if (basket.length === 0) {
+  if (basket.length === 0 && !placingOrder) {
     return <Cartempty />;
   }
+  
 
   return (
     <div
