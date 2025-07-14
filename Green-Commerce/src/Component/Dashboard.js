@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import {
   ResponsiveContainer,
@@ -110,10 +111,10 @@ export default function Dashboard() {
     async function loadDashboard() {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:5000/user-dashboard?email=${encodeURIComponent(email)}`);
+        const res = await fetch(`http://localhost:9000/user-dashboard?email=${encodeURIComponent(email)}`);
         if (!res.ok) throw new Error(`Server responded ${res.status}`);
         const json = await res.json();
-         
+
         setPlasticData(json.plasticReductionList || []);
         // Sort months Jan→Dec
         const monthOrder = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -133,7 +134,7 @@ export default function Dashboard() {
 
     async function fetchLeaderboard() {
       try {
-        const res = await fetch('http://localhost:5000/top-badge-scores');
+        const res = await fetch('http://localhost:9000/top-badge-scores');
         if (!res.ok) throw new Error('Failed to fetch leaderboard');
         const data = await res.json();
         const sortedData = [...data].sort((a, b) => b.totalCo2Saved - a.totalCo2Saved);
