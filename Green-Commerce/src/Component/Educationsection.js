@@ -1,560 +1,267 @@
 import React, { useState } from "react";
-import { motion } from 'framer-motion';
-import net0carbon from "../assets/net0carbon.png"
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  ReferenceLine,
-  LabelList,
-  Cell,
-} from "recharts";
+import { motion } from "framer-motion";
+import packagingVideo from "../assets/videos/sus_pack.mp4";
+import recycleVideo from "../assets/videos/package.mp4";
+import net0carbon from "../assets/walmartsustainablelogo.jpeg";
 import { FaCheckCircle, FaMapMarkerAlt, FaPlusCircle } from "react-icons/fa";
 
 const faqItems = [
   {
-    question: "Why did we create Green Store?",
+    question: "Why did we launch the Walmart Eco-Hub?",
     answer:
-      "The Amazon Green Store was created to make it easier for customers to find and buy eco-friendly products, promoting conscious shopping and reducing environmental impact.",
+      "We built the Walmart Eco-Hub to help customers easily find and purchase sustainably sourced, low-impact products — aligning with our Project Gigaton goal to remove a gigaton of emissions from our supply chain by 2030.",
   },
   {
-    question: "How group orders work ?",
-    answer:
+    question: "How do Group Orders work?",
+    answer: (
       <>
-      <section style={{ display: 'flex', alignItems: 'flex-start', marginTop: 20 }}>
-        <FaPlusCircle size={24} style={{ marginRight: 12, color: '#22c55e' }} />
-        <div>
-          <strong>1. Start a Group Order</strong>
-          <p>Click “Start Group Order” on your cart page, then choose “Create” or “Join Nearby.”</p>
-        </div>
-      </section>
-
-      <section style={{ display: 'flex', alignItems: 'flex-start', marginTop: 20 }}>
-        <FaCheckCircle size={24} style={{ marginRight: 12, color: '#10b981' }} />
-        <div>
-          <strong>2. Create a Group</strong>
-          <p>Fill in name, deadline, location & review your cart.  
-          We POST to <code>/group/create</code> (makes the group) then to <code>/place-order</code> (records your order).</p>
-        </div>
-      </section>
-
-      <section style={{ display: 'flex', alignItems: 'flex-start', marginTop: 20 }}>
-        <FaMapMarkerAlt size={24} style={{ marginRight: 12, color: '#3b82f6' }} />
-        <div>
-          <strong>3. Join a Group</strong>
-          <p>Browse nearby groups (via <code>/group/nearby</code>).  
-          Click “Join Group” to POST to <code>/group/join/:id</code>, then to <code>/place-order</code>.</p>
-        </div>
-      </section>
-
-      <section style={{ marginTop: 30 }}>
-        <strong>Data Stored:</strong>
-        <ul style={{ lineHeight: 1.6 }}>
-          <li><code>Group</code>: name, link, deadline, items, members, location</li>
-          <li><code>Order</code>: userEmail, items, totalAmount, ecoPackaging, placedAt</li>
-        </ul>
-      </section>
+        <section style={{ display: "flex", alignItems: "flex-start", marginTop: 20 }}>
+          <FaPlusCircle size={24} style={{ marginRight: 12, color: "#61C13D" }} />
+          <div>
+            <strong>1. Start a Group Order</strong>
+            <p>Click “Start Group Order” on Eco-Hub, choose to create or join a nearby order.</p>
+          </div>
+        </section>
+        <section style={{ display: "flex", alignItems: "flex-start", marginTop: 20 }}>
+          <FaCheckCircle size={24} style={{ marginRight: 12, color: "#0071CE" }} />
+          <div>
+            <strong>2. Create a Group</strong>
+            <p>Enter name, location, deadline & review items. This integrates seamlessly behind the scenes.</p>
+          </div>
+        </section>
+        <section style={{ display: "flex", alignItems: "flex-start", marginTop: 20 }}>
+          <FaMapMarkerAlt size={24} style={{ marginRight: 12, color: "#FFC220" }} />
+          <div>
+            <strong>3. Join a Group</strong>
+            <p>Browse nearby via our API and join with a single click, then place your order securely.</p>
+          </div>
+        </section>
       </>
+    ),
   },
   {
-    question: "What is Eco Grade and How its Important ?",
+    question: "What is Eco Grade?",
     answer: (
       <>
         <p>
-          <strong>Eco Grade</strong> is a single‐letter sustainability rating (A*, A, B+, B or C) that summarizes a product’s overall environmental performance.
+          <strong>Eco Grade</strong> is a letter rating (A*, A, B+, B, C) that summarizes a product’s environmental performance on Walmart.com.
         </p>
-
-        <p>We calculate it by evaluating a set of key metrics:</p>
-        <ul style={{ marginLeft: "1.5rem", lineHeight: "1.6" }}>
-          <li><strong>Plastic Reduction (%):</strong> How much plastic has been replaced or eliminated</li>
-          <li><strong>Chemical Usage (%):</strong> How low is the use of harmful chemicals</li>
-          <li><strong>CO₂ Emissions Reduction (%):</strong> How much carbon footprint is cut</li>
-          <li><strong>Recyclability:</strong> Is the product & its packaging recyclable?</li>
-          <li><strong>Biodegradability (%):</strong> How quickly materials break down after use</li>
-          <li><strong>Water Consumption (L) & Energy Use (kWh):</strong> Resources consumed per unit</li>
-          <li><strong>Product Weight (kg) & Lifespan (yrs):</strong> Durability and material intensity</li>
+        <ul style={{ marginLeft: 20, lineHeight: 1.6 }}>
+          <li>A*: ≥ 90 — outstanding</li>
+          <li>A: 80–89 — very good</li>
+          <li>B+: 70–79 — good</li>
+          <li>B: 60–69 — fair</li>
+          <li>C: &lt;60 — needs improvement</li>
         </ul>
-         
-        <p>
-          Each metric is normalized to a 0–100 scale, weighted by its environmental impact, and combined into a single composite score. That final score maps to:
-        </p>
-        <ul style={{ marginLeft: "1.5rem", lineHeight: "1.6" }}>
-          <li><strong>A*</strong> (≥ 90): Outstanding environmental performance</li>
-          <li><strong>A</strong> (80–89): Very good, with only minor areas to improve</li>
-          <li><strong>B+</strong> (70–79): Good, but some metrics need attention</li>
-          <li><strong>B</strong> (60–69): Fair, significant room for improvement</li>
-          <li><strong>C</strong> (&lt; 60): Below standard, requires substantial changes</li>
-        </ul>
-
-        <p>
-          <strong>Example:</strong> A product that reduces 84% of its plastic, limits chemicals to 19%, cuts CO₂ by 37%, is recyclable, achieves 60% biodegradability, uses only 2.5 L water & 0.1 kWh energy, weighs 0.75 kg and lasts 2 years would earn a <strong>A</strong>—letting you spot top‐performing eco‐friendly products at a glance.
-        </p>
       </>
-    )
+    ),
   },
   {
-    question: "What criteria are used to certify products as eco-friendly?",
-    answer:
-      "Products are certified based on eco-certifications, carbon emissions, material sourcing, recyclability, energy and water efficiency, non-toxicity, and packaging—verified by reputable organizations.",
+    question: "How can I request sustainability feedback?",
+    answer: (
+      <p>
+        Use the{" "}
+        <a href="/feedback" style={{ color: "#0071CE", textDecoration: "underline" }}>
+          Feedback Form
+        </a>{" "}
+        to report any concerns or suggestions about our eco-claims.
+      </p>
+    ),
   },
-  {
-    question: "Can I provide feedback or report concerns about eco-friendly claims?",
-    answer:
-      "Yes! Use our feedback system to report any concerns about a product's eco-friendly claims so we can continuously improve accuracy and reliability.",
-  },
-  
-  
- 
-
-  
-  
 ];
 
-const sections = [
-  { key: "carbon", title: "Carbon", desc: "3% absolute emissions reduction; 13% carbon intensity decrease; 473 Climate Pledge signatories", icon: "🟢" },
-  { key: "carbonFreeEnergy", title: "Carbon-Free Energy", desc: "100% renewables matched; world’s largest corporate purchaser of renewable energy", icon: "⚡" },
-  { key: "packaging", title: "Packaging", desc: "90% of new devices in 100% recyclable packaging; 9% plastic packaging weight reduction", icon: "📦" },
-  { key: "wasteCircularity", title: "Waste & Circularity", desc: "75% reduction in food waste intensity (EU); 28% (US); 82M meals donated", icon: "♻️" },
-  { key: "water", title: "Water", desc: "41% progress toward AWS water positive; returning more water than used", icon: "💧" },
-  { key: "valueChain", title: "Value Chain", desc: "Supplier decarbonization initiatives; public Sustainable Supply Chain Exchange", icon: "🔗" },
-  { key: "humanRights", title: "Human Rights", desc: "3K+ supplier assessments on social & environmental metrics", icon: "⚖️" },
-  { key: "supplyChain", title: "Responsible Supply Chain", desc: ">$1.3B invested in diverse suppliers; $4.3B with US Tier-1 diverse", icon: "🚚" },
-  { key: "productsMaterials", title: "Sustainable Products & Materials", desc: "1.16B Climate Pledge Friendly items sold; 16K homes supported", icon: "🌱" },
-  { key: "communityImpact", title: "Community Impact", desc: "32M+ AWS credits for health equity; 76K employees volunteered", icon: "🏘️" },
-  { key: "employees", title: "Employees", desc: "358K employees upskilled; 100K+ veterans & spouses hired", icon: "👥" },
-  { key: "healthSafety", title: "Health & Safety", desc: "30% reduction in recordable incident rate vs 2019", icon: "🛡️" },
-];
-
-const progressData = [
-  { year: "2019", value: 42 },
-  { year: "2020", value: 65 },
-  { year: "2021", value: 85 },
-  { year: "2022", value: 90 },
-  { year: "2023", value: 100 },
-];
-
-export default function EducationSection() {
+export default function WalmartEducationSection() {
   const [activeIndex, setActiveIndex] = useState(null);
-  const toggleItem = (idx) => setActiveIndex(activeIndex === idx ? null : idx);
 
-  // ---- inline style objects ----
-  const container = {
-    display: "flex",
-    flexDirection: "column",
-    fontFamily: "'Montserrat', sans-serif",
-    color: "#01332b",
-    background: "linear-gradient(135deg, #eafaf4 0%, #f5fbf9 100%)",
-    padding: "32px",
-    gap: "48px",
-  };
-  const hero = {
-    display: "flex",
-    alignItems: "flex-start",
-    gap: "32px",
-    padding: "48px 0",
-  };
-  const textBlock = {
-    flex: 1,
-    maxWidth: "600px",
-  };
-  const videoBlock = {
-    flex: 1,
-    borderRadius: "12px",
-    overflow: "hidden",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
-  }
-  const graphBlock = {
-    flex: 1,
-    padding: "24px",
-    backgroundColor: "#fff",
-    borderRadius: "12px",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
-  };
-  const heading = {
-    fontSize: "3rem",
-    fontWeight: 700,
-    marginBottom: "16px",
-    lineHeight: 1.2,
-    color: "#01332b",
-  };
-  const paragraph = {
-    fontSize: "1.1rem",
-    fontWeight: 500,
-    lineHeight: 1.6,
-    color: "#01332b",
-  };
-  const sidebar = {
-    display: "flex",
-    gap: "16px",
-    listStyle: "none",
-    padding: 0,
-    margin: 0,
-  };
-  const link = {
-    color: "#006d5a",
-    textDecoration: "none",
-    fontWeight: 600,
-    padding: "8px 12px",
-    borderRadius: "4px",
-  };
-  
- 
-  
-  
-  const sectionTitle = {
-    fontSize: "2rem",
-    marginBottom: "16px",
-    borderBottom: "2px solid #d0e3de",
-    paddingBottom: "8px",
-  };
-  const heroGrid = {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-    gap: "16px",
-    marginBottom: "48px",
-  };
-  const heroCard = {
-    backgroundColor: "#fff",
-    borderRadius: "12px",
-    padding: "16px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-    textAlign: "center",
-    cursor: "pointer",
-    transition: "transform 0.2s, box-shadow 0.2s",
-  };
-  const heroIcon = { fontSize: "1.8rem", marginBottom: "8px" };
-  const heroTitle = {
-    fontSize: "1rem",
-    fontWeight: "600",
-    marginBottom: "4px",
-    color: "#01332b",
-  };
-  const heroDesc = {
-    fontSize: "0.85rem",
-    color: "#01332b",
-    lineHeight: 1.4,
-  };
-  const certGrid = {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
-    gap: "16px",
-  };
-  const certItem = {
-    backgroundColor: "#fff",
-    borderRadius: "8px",
-    padding: "16px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
-  };
-  const faqItem = {
-    marginBottom: "16px",
-    borderRadius: "8px",
-    overflow: "hidden",
-    backgroundColor: "#fff",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-    borderLeft: "4px solid #006d5a",
-  };
-
-  const questionBtn = (open) => ({
-    width: "100%",
-    textAlign: "left",
-    padding: "16px 20px",
-    background: open ? "#e6f5ef" : "#f9fdfb",
-    border: "none",
-    cursor: "pointer",
-    fontSize: "1rem",
-    fontWeight: 600,
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    transition: "background 0.3s ease",
-  });
-
-  const answerDiv = (open) => ({
-    maxHeight: open ? "500px" : "0",
-    overflow: "hidden",
-    transition: "max-height 0.4s ease",
-    padding: open ? "16px 20px" : "0 20px",
-    borderTop: open ? "1px solid #d0e3de" : "none",
-    fontSize: "0.95rem",
-    lineHeight: 1.5,
-  });
-  const cta = {
-    marginTop: "24px",
-    textAlign: "center",
-  };
-  const ctaBtn = {
-    display: "inline-block",
-    backgroundColor: "#006d5a",
-    color: "#fff",
-    padding: "12px 24px",
-    borderRadius: "24px",
-    textDecoration: "none",
-    fontWeight: 600,
-  };
-  
-  const handleNavClick = (e, id) => {
+  // smooth scroll helper
+  const scrollTo = (e, id) => {
     e.preventDefault();
     const el = document.getElementById(id);
-    if (el) {
-      // how many pixels you want between the top of the viewport and the section
-      const offset = 150;
-      // get the element’s distance from the top of the document…
-      const top = el.getBoundingClientRect().top + window.pageYOffset;
-      // …then subtract your offset
-      window.scrollTo({ top: top - offset, behavior: 'smooth' });
-    }
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.pageYOffset - 80;
+    window.scrollTo({ top, behavior: "smooth" });
   };
+
+  // shared style objects
+  const container = { fontFamily: "Arial, sans-serif", background: "#f3f9fb", padding: 32, color: "#01332b" };
+  const cardText = { background: "#fff", padding: 24, borderRadius: 8, boxShadow: "0 2px 8px rgba(0,0,0,0.05)", lineHeight: 1.6 };
+  const sectionTitle = { fontSize: 24, borderBottom: "2px solid #e0f2f1", marginBottom: 16, paddingBottom: 8, color: "#01332b" };
+  const navList = { display: "flex", gap: 16, listStyle: "none", padding: 0, marginBottom: 24 ,marginLeft:50,fontSize:20};
+  const navLink = { color: "#0071CE", textDecoration: "none", fontWeight: 600, cursor: "pointer" };
 
   return (
     <div style={container}>
-      {/* Sidebar Nav */}
-      <nav>
-        <ul style={sidebar}>
-          <li>
-            <a href="/green" style={link}>Home</a>
-          </li>
-          <li>
-            <a
-              href="#EcoCertification"
-              style={link}
-              onClick={e => handleNavClick(e, 'EcoCertification')}
+
+      {/* NAVBAR */}
+      <motion.nav initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.1 } } }}>
+        <ul style={navList}>
+          {["Home", "Overview", "FAQs"].map((label, i) => (
+            <motion.li
+              key={i}
+              variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0, transition: { duration: 0.4 } } }}
             >
-              Highlights
-            </a>
-          </li>
-          <li>
-            <a
-              href="#FAQ"
-              style={link}
-              onClick={e => handleNavClick(e, 'FAQ')}
-            >
-              FAQs
-            </a>
-          </li>
+              <a
+                href={i === 0 ? "/" : i === 1 ? "#overview" : "#FAQ"}
+                style={navLink}
+                onClick={e => scrollTo(e, i === 1 ? "overview" : "FAQ")}
+                onMouseEnter={e => (e.currentTarget.style.color = "#61C13D")}
+                onMouseLeave={e => (e.currentTarget.style.color = "#0071CE")}
+              >
+                {label}
+              </a>
+            </motion.li>
+          ))}
         </ul>
-      </nav>
+      </motion.nav>
 
-      {/* HERO: Carbon Emission */}
+      {/* ROW 1: Video ↔ Text */}
       <motion.section
-        style={{...hero,marginTop:'-30px'}}
-        initial={{ opacity: 0, y: 30 }}
+        id="overview"
+        style={{ display: "flex", gap: 32, alignItems: "center", margin: "2rem 0" }}
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.5 }}
       >
-        <motion.div
-          style={textBlock}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-        >
-          <h1 style={heading}>Carbon Emission</h1>
-          <p style={paragraph}>
-            The science is clear. Significant carbon emission reductions are
-            required to avoid the most severe effects of climate change, restore
-            biodiversity, protect vulnerable communities, and ensure a habitable
-            planet for future generations. Amazon has an incredibly ambitious
-            goal to achieve net-zero carbon across our operations by 2040. We’ll
-            do this by implementing decarbonization strategies through real
-            business changes and innovations, and neutralizing any remaining
-            emissions with additional, quantifiable, real, permanent, and
-            socially beneficial offsets to achieve
-            <span
-              style={{
-                fontSize: "1.5rem",
-                fontWeight: 700,
-                color: "#005448",
-              }}
-            >
-              {" "}
-              net-zero carbon by 2040.
-            </span>
-          </p>
-        </motion.div>
+        {/* Video Left */}
+        <div style={{ flex: 1, textAlign: "center" }}>
+          <video
+            src={packagingVideo}
+            autoPlay
+            loop
+            muted
+            controls
+            style={{ width: "100%", maxWidth: 600, height: 340, borderRadius: 8, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
+          />
+        </div>
 
-        <motion.div
-          style={videoBlock}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-        >
+        {/* Text Right */}
+        <div style={{ flex: 1 }}>
+          <div style={cardText}>
+            <h2 style={{ marginTop: 0 }}>See Why Sustainable Packaging Is Important to Walmart</h2>
+            <p>
+              Our sustainable packaging initiatives reduce waste and improve recyclability, aligning with Walmart’s
+              goal to achieve zero waste in our operations by 2025.
+            </p>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* ROW 2: Text ↔ Video */}
+      <motion.section
+        style={{ display: "flex", gap: 32, alignItems: "center", margin: "2rem 0", flexDirection: "row-reverse" }}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Video Right */}
+        <div style={{ flex: 1, textAlign: "center" }}>
+          <video
+            src={recycleVideo}
+            autoPlay
+            loop
+            muted
+            controls
+            style={{ width: "100%", maxWidth: 600, height: 340, borderRadius: 8, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
+          />
+        </div>
+
+        {/* Text Left */}
+        <div style={{ flex: 1 }}>
+          <div style={cardText}>
+            <h2 style={{ marginTop: 0 }}>Recycling in Action</h2>
+            <p>
+              Watch how Walmart repurposes returned and waste materials into fresh packaging, closing the loop and
+              cutting down on landfill-bound waste.
+            </p>
+            <ul style={{ marginLeft: 16 }}>
+              <li>Collection at distribution centers</li>
+              <li>Sorting & cleaning materials</li>
+              <li>Reprocessing into new corrugated packaging</li>
+              <li>Reuse across our Eco-Hub network</li>
+            </ul>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* ROW 3: Image ↔ Text */}
+      <motion.section
+        style={{ display: "flex", gap: 32, alignItems: "center", margin: "2rem 0" }}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Image Left */}
+        <div style={{ flex: 1, textAlign: "center" }}>
           <img
             src={net0carbon}
-            alt="Carbon Emission Illustration"
-            style={{
-              width: "500px",
-              height: "450px",
-              display: "block",
-              borderRadius: "8px",
-            }}
+            alt="Sustainability Illustration"
+            style={{ width: "100%", maxWidth: 600, borderRadius: 8, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
           />
-        </motion.div>
-      </motion.section>
-
-
-      {/* TUTORIAL: Carbon-Free Energy + Animated Graph */}
-      <motion.section
-        style={{...hero,marginTop:'-90px'}}
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3, duration: 0.8 }}
-      >
-        <motion.div
-          style={graphBlock}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-        >
-          <ResponsiveContainer width="100%" height={320}>
-            <BarChart data={progressData}>
-              <CartesianGrid stroke="#f0f0f0" />
-              <XAxis dataKey="year" />
-              <YAxis
-                domain={[0, 100]}
-                tickFormatter={(v) => `${v}%`}
-              />
-              <ReferenceLine
-                y={100}
-                stroke="#006d5a"
-                strokeDasharray="4 4"
-                label={{
-                  value: "Goal 100%",
-                  position: "top",
-                  fill: "#006d5a",
-                  fontSize: 12,
-                }}
-              />
-              <Bar
-                dataKey="value"
-                isAnimationActive
-                animationDuration={1200}
-                radius={[8, 8, 0, 0]}
-              >
-                {progressData.map((entry) => (
-                  <Cell
-                    key={entry.year}
-                    fill={entry.year === "2023" ? "#005448" : "#a6fbd3"}
-                  />
-                ))}
-
-                <LabelList
-                  dataKey="value"
-                  position="top"
-                  formatter={(v) => `${v}%`}
-                  style={{ fill: "#005448", fontSize: "0.85rem" }}
-                />
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </motion.div>
-        <motion.div
-          style={textBlock}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.7, duration: 0.6 }}
-        >
-          <h2 style={heading}>Carbon-Free Energy</h2>
-          <p style={paragraph}>
-            Transitioning to carbon-free energy sources—which include renewable
-            sources like wind and solar as well as nuclear—is one of the most
-            effective ways to lower Scope 2 emissions. By scaling carbon-free
-            energy, we aim to make Amazon a more resilient and sustainable
-            business, drive a global transition to cleaner energy, and fulfill
-            The Climate Pledge of {'  '} 
-             {' '} net-zero carbon by 2040.
-            
-          </p>
-          <p style={paragraph}>
-            We’re proud to have hit 100% renewable-energy match in 2023—seven
-            years early.
-          </p>
-        </motion.div>
-      </motion.section>
-
-      {/* Hero: Sustainability Topics */}
-      <h style={heading}>Sustainability Report Highlights</h>
-      <section style={heroGrid} id="EcoCertification">
-        {sections.map((s) => (
-          <div
-            key={s.key}
-            style={heroCard}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.03)";
-              e.currentTarget.style.boxShadow = "0 6px 16px rgba(0,0,0,0.15)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.05)";
-            }}
-          >
-            <div style={heroIcon}>{s.icon}</div>
-            <div style={heroTitle}>{s.title}</div>
-            <div style={heroDesc}>{s.desc}</div>
-          </div>
-        ))}
-      </section>
-
-      {/* Eco-Friendly Certifications */}
-      {/* <section id="EcoCertification">
-        <h2 style={sectionTitle}>Eco-Friendly Certifications</h2>
-        <div style={certGrid}>
-          {["eco_badge1.png", "eco_badge2.png", "eco_badge3.png", "eco_badge4.png"].map(
-            (img, i) => (
-              <div key={i} style={certItem}>
-                <img
-                  src={`/images/${img}`}
-                  alt="Certification badge"
-                  style={{ maxWidth: "80px" }}
-                />
-              </div>
-            )
-          )}
         </div>
-      </section> */}
 
-      {/* FAQ */}
+        {/* Text Right */}
+        <div style={{ flex: 1 }}>
+          <div style={cardText}>
+            <h2 style={{ marginTop: 0 }}>Walmart Sustainability Hub</h2>
+            <p>
+              Explore our ongoing commitment to reduce environmental impact and improve community well-being.
+              From carbon-free energy goals to sustainable products, our Eco-Hub highlights progress and
+              empowers you to shop responsibly.
+            </p>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* FAQ Section */}
       <section id="FAQ">
         <h2 style={sectionTitle}>Frequently Asked Questions</h2>
         {faqItems.map((item, idx) => {
-          const isOpen = activeIndex === idx;
+          const open = activeIndex === idx;
           return (
-            <div key={idx} style={faqItem}>
+            <div
+              key={idx}
+              style={{
+                margin: "16px 0",
+                background: "#fff",
+                borderRadius: 8,
+                overflow: "hidden",
+                borderLeft: "4px solid #61C13D",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+              }}
+            >
               <button
-                onClick={() => toggleItem(idx)}
-                style={questionBtn(isOpen)}
+                onClick={() => setActiveIndex(open ? null : idx)}
+                style={{
+                  padding: 16,
+                  width: "100%",
+                  background: open ? "#e8f5e9" : "#f9fcfb",
+                  border: "none",
+                  textAlign: "left",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                }}
               >
                 <span>{item.question}</span>
-                <span
-                  style={{
-                    display: "inline-block",
-                    transform: isOpen ? "rotate(45deg)" : "rotate(0)",
-                    transition: "transform 0.3s ease",
-                    fontSize: "1.25rem",
-                    lineHeight: 1,
-                  }}
-                >
-                  +
-                </span>
+                <span style={{ transform: open ? "rotate(45deg)" : "rotate(0)", transition: "0.2s" }}>+</span>
               </button>
-              <div style={answerDiv(isOpen)}>
+              <div
+                style={{
+                  maxHeight: open ? 500 : 0,
+                  overflow: "hidden",
+                  transition: "max-height 0.3s ease",
+                  padding: open ? "16px" : "0 16px",
+                  fontSize: 14,
+                }}
+              >
                 {item.answer}
               </div>
             </div>
           );
         })}
       </section>
-
-      {/* Call to Action */}
-      <div style={cta}>
-        <a href="/green" style={ctaBtn}>
-          Shop Eco-Friendly Products
-        </a>
-      </div>
     </div>
   );
 }

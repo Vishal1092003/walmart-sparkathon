@@ -14,7 +14,7 @@ app.use(cors({
 }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT;
 
 // Routes
 const groupRoutes = require('./routes/group');

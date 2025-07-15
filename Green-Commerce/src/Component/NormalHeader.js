@@ -234,7 +234,7 @@ const WalmartHeader = () => {
             }}
         >
             {/* Logo */}
-            <Link to="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", marginRight: 32 }}>
+            <Link to="/green" style={{ display: "flex", alignItems: "center", textDecoration: "none", marginRight: 32 }}>
                 <img src={logo} alt="Walmart" style={{ height: 50, objectFit: "contain" }} />
             </Link>
 

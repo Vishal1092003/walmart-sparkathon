@@ -244,6 +244,8 @@ export default function GreenProducts({ description, topN = 5 }) {
     });
 
     useEffect(() => {
+        console.log("GreenProducts useEffect fired, description:", description);
+
         if (!description) return;            // nothing to do until user searches
         setLoading(true);
         fetch('http://localhost:8000/recommend', {
